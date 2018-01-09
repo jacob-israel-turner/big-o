@@ -8,7 +8,6 @@ function benchmark(max, steps, algorithm, arrayBuilder) {
     const startTime = new Date().getTime();
     algorithm(arrayToTest);
     const endTime = new Date().getTime();
-    console.log(endTime, startTime);
     console.log(`=======================`);
     console.log(`Input Size: ${currentAmount}`);
     console.log(`Runtime: ${endTime - startTime}`);
@@ -30,9 +29,25 @@ function benchmark(max, steps, algorithm, arrayBuilder) {
 // benchmark(50000, 20, selectionSort, (index, max) => Math.floor(Math.random() * max));
 // benchmark(50000000, 20, arrayInsert, (index, max) => Math.floor(Math.random() * max));
 // benchmark(10000, 20, findDuplicatesBad, (index, max) => Math.floor(Math.random() * max));
-// benchmark(10000000, 20, findDuplicatesGood, (index, max) => Math.floor(Math.random() * max));
-// benchmark(100, 20, binarySearch, (index, max) => index);
+// benchmark(100000000, 20, findDuplicatesGood, (index, max) => Math.floor(Math.random() * max));
+// benchmark(100000000, 20, binarySearch, (index, max) => index);
 // benchmark(1000, 20, travellingSalesman, (index, max) => ([Math.floor(Math.random() * max), Math.floor(Math.random() * max)]));
+// benchmark(5000000, 20, radixSort, (index, max) => Math.floor(Math.random() * max)); // Unbound W
+benchmark(5000000, 20, radixSort, (index, max) => Math.floor(Math.random() * 1000)); // Bound W
+
+function radixSort(arr, step = 1, max) {
+  let buckets = [];
+  arr.forEach(i => {
+    let val = `${i}`
+    if (!max || max < val.length) max = val.length;
+    val = val[val.length - step];
+    if (!buckets[val || 0]) buckets[val || 0] = [];
+    buckets[val || 0].push(i);
+  });
+  let sortedArr = buckets.reduce((final, next) => final.concat(next), []);
+  if (step < max) return sort(sortedArr, step + 1, max);
+  else return sortedArr;
+}
 
 function sort(array) {
   return array.sort();
